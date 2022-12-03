@@ -69,9 +69,7 @@ function resize_image($file) {
 }
 
 function resize_run($folder) {
-
     $images = scandir($folder);
-
     foreach($images as $image) {
         $img = $folder.$image;
         $filesize = filesize($img);
@@ -85,7 +83,6 @@ function resize_run($folder) {
             }
         }
     }
-
 }
 
 function unlink_file($file) {
@@ -94,6 +91,27 @@ function unlink_file($file) {
 
 function ffmpeg_run($foldername, $filename, $extension) {
     shell_exec("C:\\ffmpeg\\bin\\ffmpeg.exe -i C:\\ffmpeg\\video_in\\".$filename.".".$extension." -codec: copy -start_number 0 -hls_time 2 -hls_list_size 0 -f hls C:\\ffmpeg\\video_out\\".$foldername."\\".$filename.".m3u8");
+}
+
+// Create folder by Url path
+function createFolderByPath($fullUrl, $folderPath) {
+    $path = parse_url( $fullUrl, PHP_URL_PATH );
+    $dir = $folderPath . dirname($path) . '/';
+
+    if ( !file_exists( $dir ) ) {
+        mkdir( $dir, 0777, true );
+    }
+}
+
+// Put content to folder
+function put_content( $fullUrl, $folderPath) {
+    $data = curl($fullUrl);
+    $remove_array = explode("/", $fullUrl);
+    unset($remove_array[0]);
+    unset($remove_array[1]);
+    unset($remove_array[2]);
+    $imp = implode('/', $remove_array);
+    return file_put_contents($folderPath.$imp, $data);
 }
 
 function getlink2() {
@@ -380,6 +398,14 @@ function download_input() {
    </head>
    <body>
       <form role = "form" action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post">
+        <div class="form-group">
+            <label for="comment">Domain *:</label>
+            <input class="form-control" rows="5" id="comment" name="domain" required>
+          </div>
+        <div class="form-group">
+            <label for="comment">Domain Link File*:</label>
+            <input class="form-control" rows="5" id="comment" name="domain-link">
+          </div>
          <div class = "form-group">
             <label for = "name">Player Details</label>
             <textarea class = "form-control" rows = "3" placeholder = "Player Details" name="form-data"></textarea>

@@ -11,30 +11,15 @@ class Download extends Controller {
 	 */
 	public function download($url) {
 
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-
 		echo '<a href="'.ROOTURL.'/delete">Delete All</a>';
     	$domain = getDomain($url);
 		$output = curl($url);
 		
-		//$pattern_url = "/\b((?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]*))/i";
+		$pattern_url = "/\b((?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]*))/i";
 
 		$pattern_mp4 = '/((?!\/)([\/|\-|\_]|[0-9]|[a-zA-Z])*\.(mp4|avi))/i';
 
 		$pattern_image = '/((?!\/)([\/|\-|\_]|[0-9]|[a-zA-Z])*\.(jpg|png))/i';
-
-		//preg_match_all($url_pattern, $output, $matches);
-
-		//foreach($matches[0] as $url_item) {
-			//echo $url_item.'<br/>';
-			/*
-			 * Use for eporner
-			 */
-		    //$exp = explode('"', $url_item);
-		    //$full_url = $domain.$exp[1];
-		    //$data_url = curl($full_url);
-
-		//}
 
 		if(preg_match_all($pattern_mp4, $output, $matches)) {
 			foreach ($matches[0] as $file) {
@@ -95,52 +80,72 @@ class Download extends Controller {
 			}
 		}
 
-		} // server method
-		else {
-			$this->view('download/form');
-		}
 		// elseif end
 	}
 
 	public function downloadfile() {
+
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+
 			if(isset($_POST['btn-submit'])) {
+
+				// Imput
 			    $form_data = $_POST['form-data'];
+			    $domain = trim($_POST['domain']);
+			    $domain_link = trim($_POST['domain-link']);
 
-			    $domain = 'https://hanoitv.vn';
-			    $data = curl($domain);
-
-			    $d = explode('"', $form_data);
-			    $pattern = "/\b(.*(\.css|\.js).*)/i";
+			    // Regex
+			    $pattern = "/\b(.*(\.css|\.js|\.jpg|\.png|\.webp|\.svg).*)/i";
 			    preg_match_all($pattern, $form_data, $matches);
 
 			    foreach ($matches[0] as $value) {
 
-			        $exp = explode('"', $value);
+			    	if(preg_match('/hanoitv\.vn/',$domain)) {
 
-			        $exp = explode('/', $value);
-			        echo $exp[1]. '==>'.$exp[2].'<br/>';
-			        // get file name
-			        $uri_file = $exp[1];
-			        $exp = explode('/', $uri_file);
-			        $filename = end($exp);
-			        
+				    	// hanoitv
 
-			        $url = $domain.$uri_file;
-			        //var_dump($url);
-			        //$url_data = curl($url);
+				        $exp = explode('"', $value);
 
-			        $result = preg_replace('/\?v\=.*/', "", $url);
-			        //var_dump($result);
-			        //var_dump($url);
+				        $exp = explode('/', $value);
+				        $uri = '/'.$exp[1]. '/'.$exp[2];
 
-			        $folderPath = ROOTPATH.'\\public\\download\\';
-			        //file_put_contents($folderPath.$filename, $url_data);
-			        //foreach($exp[1] as $url) {
-			        	
-			            //var_dump($domain.$url);
-			        //}
-			        
+				        // Remove ?
+				        $exp_remove = explode('?', $uri);
+				        $uri2 = $exp_remove[0];
+
+				        // Remove "
+				       	$exp2 = explode('"',$uri2);
+				       	$fullUrl = $domain.$exp2[0];
+				       	//echo $fullUrl.'<br/>';
+				        // get file name
+				        $uri_file = $exp[1];
+				        $file = explode('/', $fullUrl);
+				        $filename = end($file);
+				        var_dump($fullUrl);
+				        // Folder
+				        $folderPath = ROOTPATH.'\\public\\download\\';
+
+				       	createFolderByPath($fullUrl, $folderPath);
+				    	put_content( $fullUrl, $folderPath);
+				    }
+				    else 
+				    {
+			    		$data_string = $domain.$value;
+			    		$exp = explode('"', $data_string);
+			    		// Remove ?
+				        $exp_remove = explode('?', $exp[1]);
+				        $uri2 = $exp_remove[0];
+
+				        // haravan
+				        //$fullUrl = 'https:'.$uri2;
+
+			    		$fullUrl = $domain_link.$exp[2];
+			    		var_dump($fullUrl);
+
+			    		$folderPath = ROOTPATH.'\\public\\download\\';
+			    		//createFolderByPath($fullUrl, $folderPath);
+			    		//put_content( $fullUrl, $folderPath);
+			    	}
 			    }
 				}
 		}

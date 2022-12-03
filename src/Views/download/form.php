@@ -17,6 +17,10 @@
     <form action="<?php echo ROOTURL;?>/downloadfile" method="post">
       <div class="form-group">
         <label for="comment">Comment:</label>
+        <input class="form-control" rows="5" id="comment" name="domain"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="comment">Comment:</label>
         <textarea class="form-control" rows="5" id="comment" name="form-data"></textarea>
       </div>
       <button type="submit" name="btn-submit" class="btn btn-primary active">Submit</button>

@@ -45,7 +45,8 @@ $router->get('/onedrive/{url}', 'App\Controllers\Tools\OneDrive@onedrive');
 $router->get('/hls', 'App\Controllers\Tools\Download@hls');
 
 // Download
-//$router->get('/download/{url}', 'App\Controllers\Tools\Download@download');
+$router->get('/download/{url}', 'App\Controllers\Tools\Download@download');
+//$router->post('/download/{url}', 'App\Controllers\Tools\Download@download');
 $router->get('/downloadfile', 'App\Controllers\Tools\Download@downloadfile');
 $router->post('/downloadfile', 'App\Controllers\Tools\Download@downloadfile');
 $router->get('/delete', 'App\Controllers\Tools\Download@delete');
