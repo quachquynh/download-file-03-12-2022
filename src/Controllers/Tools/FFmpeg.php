@@ -9,36 +9,40 @@ use Streaming\Representation;
 
 class FFmpeg extends Controller {
 
-	public function run($foldername, $filename, $extension) {
+	public function run($foldername, $filename, $extension, $root) {
 		
 		/*
 		 * Link: http://localhost/download-file/ffmpeg/35/jp
 		 */
+
+		$create_folder_fpt = 0;
 
 		$folder_out = "C:\\ffmpeg\\video_out\\".$foldername;
 		// connect and login to FTP server
 		$ftp_conn = ftp_connect(FPT_SERVER) or die("Could not connect ".FPT_SERVER);
 		$login = ftp_login($ftp_conn, FPT_USER, FPT_PASS);
 
-		$dir = "/public_html/videos/s1/".$foldername;
+		$dir = "/public_html/videos/".$root."/".$foldername;
 
 		try {
-			if(ftp_mkdir($ftp_conn, $dir)) {
+			if(ftp_mkdir($ftp_conn, $dir) && $create_folder_fpt == 1) {
 				mkdir($folder_out);
 				ffmpeg_run($foldername, $filename, $extension);
 			}
-			else {
+			elseif($create_folder_fpt == 0) {
+				mkdir($folder_out);
 				ffmpeg_run($foldername, $filename, $extension);
 			}
 		}
 		catch(Exception $e) {
 		  echo 'Message: ' .$e->getMessage();
 		}
+
 		ftp_close($ftp_conn);
 	}
 
 	public function dash($filename) {
-		echo shell_exec('C:\\ffmpeg\\bin\\ffmpeg.exe -re -i C:\\ffmpeg\\video_in\\cn50.mp4 -map 0 -map 0 -c:a aac -c:v libx264 -b:v:0 800k -b:v:1 300k -s:v:1 640x360 -profile:v:1 baseline -profile:v:0 main -bf 1 -keyint_min 120 -g 120 -sc_threshold 0 -b_strategy 0 -ar:a:1 22050 -use_timeline 1 -use_template 1 -window_size 5 -adaptation_sets "id=0,streams=v id=1,streams=a" -f dash E:\\xampp\\htdocs\\download-file\\public\\dash\\out.mpd');
+		echo shell_exec('C:\\ffmpeg\\bin\\ffmpeg.exe -re -i C:\\ffmpeg\\video_in\\'.$filename.'.mp4 -map 0 -map 0 -c:a aac -c:v libx264 -b:v:0 800k -b:v:1 300k -s:v:1 640x360 -profile:v:1 baseline -profile:v:0 main -bf 1 -keyint_min 120 -g 120 -sc_threshold 0 -b_strategy 0 -ar:a:1 22050 -use_timeline 1 -use_template 1 -window_size 5 -adaptation_sets "id=0,streams=v id=1,streams=a" -f dash E:\\xampp\\htdocs\\download-file\\public\\dash\\out.mpd');
 	}
 
 	public function capture($filename)

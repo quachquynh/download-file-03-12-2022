@@ -47,42 +47,61 @@ function getDomain($url) {
     return $domain;
 }
 
-function resize_image($file) {
+function resize_image($file, $newwidth = 500) {
     $exp = explode("\\", $file);
     $name = end($exp);
     // Get sizes
     list($width, $height) = getimagesize($file);
-    $newwidth = 500;
     $newheight = ($height/$width)*$newwidth;
-
     // Load
     $thumb = imagecreatetruecolor($newwidth, $newheight);
     $source = imagecreatefromjpeg($file);
-
     // Resize
     imagecopyresized($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, 
     $height);
-
     // Output
-    imagejpeg($thumb, 'resize/'.$name.".jpg", 100);
+    imagejpeg($thumb, 'photos/resize/'.$name.".jpg", 100);
     return $source;
 }
 
 function resize_run($folder) {
-    $images = scandir($folder);
+    //$images = scandir($folder);
+    $images = glob($folder."*.{jpg,jpeg,png,gif}", GLOB_BRACE);
     foreach($images as $image) {
-        $img = $folder.$image;
-        $filesize = filesize($img);
+        //$img = $folder.$image;
+        $filesize = filesize($image);
         if($filesize < 10000) {
         }
         else {
-            echo $img.'<br/>';
+            echo $image.'<br/>';
             // Hoat dong khi dung return
-            if(resize_image($img)) {
-                unlink_file($img);
+            if(resize_image($image)) {
+                unlink_file($image);
             }
-        }
+        } 
     }
+}
+
+function watermark_image($file, $watermark, $name) {
+    $new_image_name = ROOTPATH.'\\photos\\w\\'.$name;
+    $image_path = $watermark;
+    list($owidth,$oheight) = getimagesize($file);
+    $width = 900;
+    $height = 900;
+    $aspect = $width / $height;
+    $newHeight = $width / $aspect;
+    $im = imagecreatetruecolor($width, $height);
+    $img_src = imagecreatefromjpeg($file);
+    imagecopyresampled($im, $img_src, 0, 0, 0, 0, $width, $height, $owidth, $oheight);
+    $watermark = imagecreatefrompng($image_path);
+    list($w_width, $w_height) = getimagesize($image_path);
+    $pos_x = $width - $w_width;
+    $pos_y = $height - $w_height;
+    imagecopy($im, $watermark, $pos_x, $pos_y, 0, 0, $w_width, $w_height);
+    imagejpeg($im, $new_image_name, 100);
+    imagedestroy($im);
+    //unlink($oldimage_name);//
+    return true;
 }
 
 function unlink_file($file) {
@@ -112,6 +131,69 @@ function put_content( $fullUrl, $folderPath) {
     unset($remove_array[2]);
     $imp = implode('/', $remove_array);
     return file_put_contents($folderPath.$imp, $data);
+}
+
+// Redirect
+function redirect($uri) {
+    $url = ROOTURL. '/';
+    header('Location: '.$url.$uri);
+}
+
+// Function to get the client IP address
+function get_client_ip() {
+    $ipaddress = '';
+    if (getenv('HTTP_CLIENT_IP'))
+        $ipaddress = getenv('HTTP_CLIENT_IP');
+    else if(getenv('HTTP_X_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+    else if(getenv('HTTP_X_FORWARDED'))
+        $ipaddress = getenv('HTTP_X_FORWARDED');
+    else if(getenv('HTTP_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_FORWARDED_FOR');
+    else if(getenv('HTTP_FORWARDED'))
+       $ipaddress = getenv('HTTP_FORWARDED');
+    else if(getenv('REMOTE_ADDR'))
+        $ipaddress = getenv('REMOTE_ADDR');
+    else
+        $ipaddress = 'UNKNOWN';
+    return $ipaddress;
+}
+
+// Clean xss
+function xss_clean($data)
+{
+// Fix &entity\n;
+$data = str_replace(array('&amp;','&lt;','&gt;'), array('&amp;amp;','&amp;lt;','&amp;gt;'), $data);
+$data = preg_replace('/(&#*\w+)[\x00-\x20]+;/u', '$1;', $data);
+$data = preg_replace('/(&#x*[0-9A-F]+);*/iu', '$1;', $data);
+$data = html_entity_decode($data, ENT_COMPAT, 'UTF-8');
+
+// Remove any attribute starting with "on" or xmlns
+$data = preg_replace('#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu', '$1>', $data);
+
+// Remove javascript: and vbscript: protocols
+$data = preg_replace('#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2nojavascript...', $data);
+$data = preg_replace('#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu', '$1=$2novbscript...', $data);
+$data = preg_replace('#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u', '$1=$2nomozbinding...', $data);
+
+// Only works in IE: <span style="width: expression(alert('Ping!'));"></span>
+$data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i', '$1>', $data);
+$data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?behaviour[\x00-\x20]*\([^>]*+>#i', '$1>', $data);
+$data = preg_replace('#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu', '$1>', $data);
+
+// Remove namespaced elements (we do not need them)
+$data = preg_replace('#</*\w+:\w[^>]*+>#i', '', $data);
+
+do
+{
+    // Remove really unwanted tags
+    $old_data = $data;
+    $data = preg_replace('#</*(?:applet|b(?:ase|gsound|link)|embed|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', $data);
+}
+while ($old_data !== $data);
+
+// we are done...
+return $data;
 }
 
 function getlink2() {
@@ -400,11 +482,11 @@ function download_input() {
       <form role = "form" action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post">
         <div class="form-group">
             <label for="comment">Domain *:</label>
-            <input class="form-control" rows="5" id="comment" name="domain" required>
+            <input class="form-control" rows="5" id="comment" name="domain" placeholder="https://demo.oceanthemes.site/sandbox/home-2" required>
           </div>
         <div class="form-group">
             <label for="comment">Domain Link File*:</label>
-            <input class="form-control" rows="5" id="comment" name="domain-link">
+            <input class="form-control" rows="5" id="comment" name="domain-link" placeholder="https://demo.oceanthemes.site/sandbox">
           </div>
          <div class = "form-group">
             <label for = "name">Player Details</label>

@@ -43,10 +43,56 @@ class FPT extends Controller {
 	}
 
 	public function list($folder) {
-		$filelist = ftp_nlist($this->conn, "/public_html/videos/s1/".$folder);
+		$filelist = ftp_nlist($this->conn, "/public_html/videos/".$folder);
+		foreach($filelist as $file) {
+			$res = ftp_size($this->conn, $file);
+			var_dump($res);
+		}
 		ftp_close($this->conn);
 		var_dump('<pre>');
-		var_dump($filelist);
+		
 		var_dump('</pre>');
+	}
+
+	public function fpt_upload($number) {
+		$root = 's1';
+		$folder = $number;
+		$dir = 'C:\\ffmpeg\\video_out\\'.$folder.'\\';
+		$files = scandir($dir);
+		foreach($files as $file) {
+			$stat = filesize($dir.$file);
+			$local_file = $dir.$file;
+			if($stat < 0) {
+			}
+			else {
+	            uploadFTP($root, $folder, $local_file, $file);
+			}
+			
+            
+            //uploadFTP($root, $folder, $local_file, $name);
+		}
+
+		/*if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if (isset($_POST['btn-submit'])) {
+				    if (is_uploaded_file($_FILES['userImage']['tmp_name'])) {
+				        $sourcePath = $_FILES['userImage']['tmp_name'];
+				        $local_file = ROOTPATH."\\public\\media\\" . $_FILES['userImage']['name'];
+				        var_dump($local_file);
+				        if (move_uploaded_file($sourcePath, $local_file)) {
+				            echo 'Info:<br/>';
+				            //echo formatBytes(filesize($file)).'<br/>';
+				            $ex = explode("\\", $local_file);
+				            $name = end($ex);
+				            echo $name.'<br/>';
+				            
+				            uploadFTP($root, $folder, $local_file, $name);
+				        }
+				    }
+				    $i++;
+			}
+		}
+		else {
+			$this->view("/fpt/upload");
+		}*/
 	}
 }

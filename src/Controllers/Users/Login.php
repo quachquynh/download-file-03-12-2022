@@ -36,16 +36,13 @@ class Login extends Controller {
 					'password' => $password
 				];
 				$user = $this->db->login($data, 'users');
-				var_dump($user);
-				$_SESSION['name'] = $user['username'];
-				$_SESSION['pass'] = $user['password'];
-
-					//$login_url = ROOTURL. '';
-					//header('Location: ' . $login_url);
-				
-				
+				if($user) {
+					//redirect('admin');
+					var_dump($user);
+				}
+				$_SESSION['username'] = $user['username'];
+				$_SESSION['password'] = $user['password'];
 			}
-
 
 		}
 		else {

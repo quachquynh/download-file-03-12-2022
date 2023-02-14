@@ -17,7 +17,7 @@ class Stream extends Controller {
 
 	public function stream() {?>
 		<video width="640" height="360" controls>
-		  <source src="https://cdn01.chongmong.xyz/" type="video/mp4">
+		  <source src="" type="video/mp4">
 		  <source src="movie.ogg" type="video/ogg">
 		Your browser does not support the video tag.
 		</video>

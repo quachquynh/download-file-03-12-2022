@@ -7,17 +7,14 @@ use App\Controllers\Users\Login;
     */
     class Controller {
 
+        protected $username;
+        protected $token;
+
         public function __construct() {
             Header('Access-Control-Allow-Origin: *'); //for allow any domain, insecure
             Header('Access-Control-Allow-Headers: *'); //for allow any headers, insecure
             Header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE'); //method allowed
-            // Enable us to use Headers
-            ob_start();
-            // Set sessions
-            if(!isset($_SESSION)) {
-                session_start();
-            }
-            $session = new Login();
+            //$session = new Login();
         }
 
         //LOAD MODEL

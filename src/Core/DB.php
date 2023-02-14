@@ -30,18 +30,25 @@ class DB {
 		if (password_verify($password, $user['password'])) {
 			$token = bin2hex(random_bytes(16));
 			$id = $user['id'];
-			$data_update = [
+			/*$data_update = [
 				'username' => $user['username'],
 				'password' => $user['password'],
 				'token' => $token
 			];
-			$this->user_update($id,$data_update, 'users');
+			$this->user_update($id,$data_update, 'users');*/
 			return $user;
 		}
 		else {
 			$login_url = ROOTURL. '/user/login';
 			header('Location: ' . $login_url);
 		}
+	}
+
+	public function getToken($username, $table) {
+		$stmt = $this->pbo->prepare("SELECT * FROM `$table` WHERE username=?");
+		$stmt->execute(array($username));
+		$user = $stmt->fetch();
+		return $user;
 	}
 
 	public function user_insert($data, $table) {

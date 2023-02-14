@@ -23,4 +23,5 @@ class Tool extends Controller {
 		$body = $this->getBody($string);
 		var_dump($body);
 	}
+
 }

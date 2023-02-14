@@ -10,12 +10,13 @@
     "require": {
         "madcoda/php-youtube-api": "1.2",
         "athlon1600/youtube-downloader": "^3.0",
-        "facebook/graph-sdk": "^5.7",
         "sohaibilyas/facebook-php-sdk": "^2.0",
         "google/apiclient": "2.12.1",
         "char0n/ffmpeg-php": "^3.0.0",
         "aminyazdanpanah/php-ffmpeg-video-streaming": "^1.2",
         "madcodez/youtube": "^0.1.4",
-        "thiagoalessio/tesseract_ocr": "^2.12"
+        "thiagoalessio/tesseract_ocr": "^2.12",
+        "phpoffice/phpspreadsheet": "^1.27",
+        "shuchkin/simplexlsx": "^1.0"
     }
 }

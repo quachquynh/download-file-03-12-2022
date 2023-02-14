@@ -21,7 +21,41 @@ class Download extends Controller {
 
 		$pattern_image = '/((?!\/)([\/|\-|\_]|[0-9]|[a-zA-Z])*\.(jpg|png))/i';
 
-		if(preg_match_all($pattern_mp4, $output, $matches)) {
+		/*if(preg_match('/jjgir/', $domain)) {
+			preg_match_all($pattern_image, $output, $matches);
+			foreach ($matches[0] as $value) {
+				$image_link = $domain.$value;
+				
+				if(preg_match('/hd\-|.*cute.*|\.png|^\d/', $image_link)) {
+					echo '';
+				}
+				else 
+				{
+					$path = parse_url($image_link);
+					$pathinfo = pathinfo($path["path"]);
+					$image_name = $pathinfo["basename"];
+					$get_data = curl($image_link);
+
+					$folder = ROOTPATH."\\photos\\";
+					if (!file_exists($folder)) {
+						mkdir($folder, 0777);
+						$result = file_put_contents($folder.$image_name, $get_data);
+						if($result) {
+							resize_run($folder);
+						}
+					}
+					else {
+						$result = file_put_contents($folder.$image_name, $get_data);
+						if($result) {
+							resize_run($folder);
+						}
+					}
+				}
+			}
+		} */
+
+
+		/*if(preg_match_all($pattern_mp4, $output, $matches)) {
 			foreach ($matches[0] as $file) {
 				$url_path = $domain.$file;
 				if(preg_match('/720p/', $url_path)) {
@@ -36,14 +70,14 @@ class Download extends Controller {
 		}
 		elseif(preg_match_all($pattern_url, $output, $matches)) {
 			var_dump($matches);
-		}
+		}*/
 
-		elseif(preg_match_all($pattern_image, $output, $matches)) {
+		if(preg_match_all($pattern_image, $output, $matches)) {
+
 			foreach ($matches[0] as $value) {
+
 				$image_link = $domain.$value;
-				
 				list($width, $height) = getimagesize($image_link);
-				var_dump($width);
 
 				$path = parse_url($image_link);
 				if(preg_match_all('/hd\-|.*cute.*|^\d/', $image_link, $m)) {
@@ -77,7 +111,7 @@ class Download extends Controller {
 						}
 					}
 				}
-			}
+			} // end foreach
 		}
 
 		// elseif end
@@ -98,8 +132,26 @@ class Download extends Controller {
 			    $pattern = "/\b(.*(\.css|\.js|\.jpg|\.png|\.webp|\.svg).*)/i";
 			    preg_match_all($pattern, $form_data, $matches);
 
-			    foreach ($matches[0] as $value) {
+			    $p_http = '#[-a-zA-Z0-9@:%_\+.~\#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~\#?&//=]*)?#si';
+			    preg_match_all($p_http, $form_data, $m_http);
+			    
+			    foreach($m_http[0] as $value) {
+				    // Regex
+				    $pattern = "/\b(.*(\.css|\.js|\.jpg|\.png|\.webp|\.svg).*)/i";
+				    preg_match_all($pattern, $value, $m_file);
+				    foreach($m_file[0] as $i) {
+				    	//echo $i."<br/>";
+				    	$exp = explode('/', $i);
+				        
+				        $fullUrl = $i;
+				        				        // Folder
+				        $folderPath = ROOTPATH.'\\public\\download\\';
+				       	createFolderByPath($fullUrl, $folderPath);
+				       	put_content( $fullUrl, $folderPath);
+				    }
+			    }
 
+			    foreach ($matches[0] as $value) {
 			    	if(preg_match('/hanoitv\.vn/',$domain)) {
 
 				    	// hanoitv
@@ -121,17 +173,18 @@ class Download extends Controller {
 				        $uri_file = $exp[1];
 				        $file = explode('/', $fullUrl);
 				        $filename = end($file);
-				        var_dump($fullUrl);
+				        
 				        // Folder
 				        $folderPath = ROOTPATH.'\\public\\download\\';
 
-				       	createFolderByPath($fullUrl, $folderPath);
-				    	put_content( $fullUrl, $folderPath);
+				       	//createFolderByPath($fullUrl, $folderPath);
+				    	//put_content( $fullUrl, $folderPath);
 				    }
 				    else 
 				    {
 			    		$data_string = $domain.$value;
-			    		$exp = explode('"', $data_string);
+			    		//$exp = explode('"', $data_string);
+			    		$exp = explode("'", $data_string);
 			    		// Remove ?
 				        $exp_remove = explode('?', $exp[1]);
 				        $uri2 = $exp_remove[0];
@@ -140,7 +193,10 @@ class Download extends Controller {
 				        //$fullUrl = 'https:'.$uri2;
 
 			    		$fullUrl = $domain_link.$exp[2];
-			    		var_dump($fullUrl);
+			    		$end = end($exp);
+			    		unset($end);
+
+			    		//var_dump($exp);
 
 			    		$folderPath = ROOTPATH.'\\public\\download\\';
 			    		//createFolderByPath($fullUrl, $folderPath);
@@ -169,5 +225,52 @@ class Download extends Controller {
 	function hls() {
 		$data = curl("https://api.cdnz.workers.dev");
 		var_dump($data);
+	}
+
+	public function download_image($url) {
+		$data = curl($url);
+		preg_match_all('/<video.*/', $data, $matches);
+		$pattern = "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
+		foreach($matches[0] as $value) {
+			preg_match_all($pattern, $value, $m2);
+			$url = $m2[0][0];
+			$exp = explode('/', $url);
+			$name = end($exp);
+			$ch = curl_init($url);
+			$fp = fopen('C:\\ffmpeg\\photos\\'.$name, 'wb');
+			curl_setopt($ch, CURLOPT_FILE, $fp);
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_exec($ch);
+			curl_close($ch);
+			fclose($fp);
+		}
+	}
+
+	public function download_video($url) {
+		$this->download_image($url);
+		$data = curl($url);
+		
+		if(preg_match('/eporner/',$data)) {
+			preg_match_all('/360p:.*/', $data, $matches);
+			preg_match_all('/\/.*\.mp4/',$matches[0][0], $m2);
+			$video = 'https://www.eporner.com'.$m2[0][0];
+			$data_vi = curl($video);
+			$url = $m2[0][0];
+			$exp = explode('/', $url);
+			$name = end($exp);
+			//echo file_put_contents("public/download/".$name,$data_vi);
+		}
+		else {
+			$pattern = "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
+
+			preg_match_all($pattern, $data, $matches);
+			foreach($matches[0] as $value) {
+				$p2 = '/(http.*\.preview\.mp4\.jpg)/';
+				preg_match_all($p2, $value, $m2);
+				//echo $value.'<br/>';
+				var_dump($m2);
+			}
+		}
+
 	}
 }

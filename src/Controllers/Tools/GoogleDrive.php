@@ -18,17 +18,17 @@ class GoogleDrive extends Controller {
 
 	public function __construct() {
 		session_start();
-		$tokenPath = 'secret_client.json';
+		$tokenPath = 'client_secret.json';
 		$this->client = new Client();
 		$this->client->setApplicationName("Api PHP");
 		$this->client->setDeveloperKey("AIzaSyCbuQ4pbc3smAXdkO9tDsb7g1s4wYE9FIU");  
-		$this->client->setClientId('252416329742-kd16oo11hivedtada46udn21nkomk5n1.apps.googleusercontent.com');
-		$this->client->setClientSecret('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');
+		//$this->client->setClientId('252416329742-kd16oo11hivedtada46udn21nkomk5n1.apps.googleusercontent.com');
+		//$this->client->setClientSecret('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');
 		$this->client->setRedirectUri('http://localhost/download-file/google-drive/token');
 		$this->client->setAccessType('offline');
 		$this->client->setScopes(array('https://www.googleapis.com/auth/drive'));
 		$this->client->setAuthConfig($tokenPath);
-		$this->client->setAccessToken($_SESSION['access_token']);
+		//$this->client->setAccessToken($this->accessToken);
 	}
 
 	public function getClient()
@@ -36,18 +36,18 @@ class GoogleDrive extends Controller {
 	    $this->client = new Client();
 	    $this->client->setApplicationName('Google Drive API PHP Quickstart');
 	    $this->client->setScopes(\Google_Service_Drive::DRIVE);
-	    $this->client->setAuthConfig('secret_client.json');
+	    $this->client->setAuthConfig('client_secret.json');
 	    $this->client->setAccessType('offline');
 	    $this->client->setIncludeGrantedScopes(true);
 	    
-	    // Load previously authorized credentials from a file.
 	    $tokenPath = ROOTPATH.'\\token\\token.json';
 
 	    if (file_exists($tokenPath)) {
-	        $_SESSION['access_token'] = json_decode(file_get_contents($tokenPath), true);
-	        var_dump($_SESSION['access_token']);
-	        if(isset($_SESSION['access_token'])){
-			    $this->client->setAccessToken($_SESSION['access_token']);
+	        $json_token = json_decode(file_get_contents($tokenPath), true);
+	        $_SESSION['token_array'] = $json_token;
+
+	        if(isset($json_token)){
+			    $this->client->setAccessToken($json_token);
 
 			    // Refresh the token if it's expired.
 			    if ($this->client->isAccessTokenExpired()) {
@@ -57,7 +57,7 @@ class GoogleDrive extends Controller {
 		        //print_r($client->getAccessToken());die;
 			    $response = ['success' => 1, 'client' => $this->client];
 			    return $response;
-		    }	
+		    }
 	    }
 	    else {
 	    	// Request authorization from the user.
@@ -84,7 +84,9 @@ class GoogleDrive extends Controller {
 
 	public function createFolder()
 	{
-		$this->client->setAccessToken($_SESSION['access_token']);
+		$token = $this->getClient();
+		$this->client = new Client();
+		$this->client->setAccessToken($_SESSION['token_array']);
 		$service = new Drive($this->client);
 		// Create Test folder
 		$fileMetadata = new DriveFile(array(
@@ -109,14 +111,12 @@ class GoogleDrive extends Controller {
 				move_uploaded_file($file_tmp, $file_path);
 				$file_data = file_get_contents($file_path);
 
-				var_dump($file_name);
-			
-
-				$client = new Client();
-				$client->setAccessToken($_SESSION['access_token']);
-				$service = new Drive($client);
+				// Fatal error: Uncaught Error: Call to a member function setAccessToken() google drive ==> Phai dung new Client
+				$this->client = new Client();
+				$this->client->setAccessToken($_SESSION['token_array']);
+				$service = new Drive($this->client);
 				//Insert a file
-			    $file = new DriveFile( array('parents' => array('1_8ePoN4kEz4SnIzuO8Isl1acsUFSc62t') ));
+			    $file = new DriveFile( array('parents' => array('19tRk3hxO3GmLClfb_DsWRuOZ8mOTuy1i') ));
 			    $file->setName($file_name);
 			    $file->setDescription('A test document');
 			    //$file->setMimeType('application/zip');
@@ -136,26 +136,97 @@ class GoogleDrive extends Controller {
 		}
 	}
 
-	public function listFiles() {
-		$this->client->setAccessToken($_SESSION['access_token']);
+
+	public function listFiles($id) {
+		//$id = '1K4wMLK8hiHMmmj0kEAOa8F7LVi5__psl';
+		// Do not delete
+		if($_SESSION['token_array'] == NULL || empty($_SESSION['token_array'])) {
+			$this->client = $this->getClient();
+		}
+		else {
+			//$this->client = new Client();
+			$this->client->setAccessToken($_SESSION['token_array']);
+			$service = new Drive($this->client);
+			$optParams = array(
+			  'pageSize' => 1000,
+			  'fields' => 'nextPageToken, files(id, name, mimeType, parents)',
+			  'q' => '"'.$id.'" in parents',
+			);
+			$results = $service->files->listFiles($optParams);
+		    echo "<ul>";
+		    foreach ($results->getFiles() as $file) {
+		        echo "<li><a href='".ROOTURL."/google-drive/download/".$file->getID()."'>".$file->getID()."</a> ==> <a href='https://drive.google.com/uc?export=download&id=".$file->getID()."' target='_blank'> " .$file->getID()."</a></li>";
+		    }
+		    echo "</ul>";
+		}
+	}
+
+	public function download($id, $name) {
+		$this->client->setAccessToken($_SESSION['token_array']);
 		$service = new Drive($this->client);
-		$optParams = array(
-		  'pageSize' => 100,
-		  'fields' => 'nextPageToken, files(id, name, mimeType, parents)',
-		  'q' => '"1OXiM8QJ2rZ0Teny_mQ01B84qz-QzD_IC" in parents',
-		);
-		$results = $service->files->listFiles($optParams);
-	    // menampilkan list file
-	    echo "<ul>";
-	    foreach ($results->getFiles() as $file) {
-	        echo "<li><a href='download.php?code=&id=".$file->getID()."'>".$file->getName()."</a></li>";
-	    }
-	    echo "</ul>";
-	    $content = $service->files->get("1dXH0NU79molxKadJxG-ClgbmLszH48Iv", array("alt" => "media"));
- 
-	    while (!$content->getBody()->eof()) {
-	        echo $content->getBody()->read(1024);
-	    }
+		$content = $service->files->get($id, array("alt" => "media"));
+	    // Download a file.
+		$handle = fopen("C:\\ffmpeg\\video_in\\".$name.".mp4", "w+");
+		while (!$content->getBody()->eof()) { 
+		    fwrite($handle, $content->getBody());
+		}
+		fclose($handle);
+		echo "success";
+	}
+
+	public function stream() {
+		$path = "public/media/video.mp4";
+		  if ($fp = fopen($path, "rb")) {
+		    $size = filesize($path); 
+		    $length = $size;
+		    $start = 0;  
+		    $end = $size - 1; 
+		    header('Content-type: video/mp4');
+		    header("Accept-Ranges: 0-$length");
+		    if (isset($_SERVER['HTTP_RANGE'])) {
+		      $c_start = $start;
+		      $c_end = $end;
+		      list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+		      if (strpos($range, ',') !== false) {
+		        header('HTTP/1.1 416 Requested Range Not Satisfiable');
+		        header("Content-Range: bytes $start-$end/$size");
+		        exit;
+		      }
+		      if ($range == '-') {
+		        $c_start = $size - substr($range, 1);
+		      } else {
+		        $range = explode('-', $range);
+		        $c_start = $range[0];
+		        $c_end = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
+		      }
+		      $c_end = ($c_end > $end) ? $end : $c_end;
+		      if ($c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
+		        header('HTTP/1.1 416 Requested Range Not Satisfiable');
+		        header("Content-Range: bytes $start-$end/$size");
+		        exit;
+		      }
+		      $start = $c_start;
+		      $end = $c_end;
+		      $length = $end - $start + 1;
+		      fseek($fp, $start);
+		      header('HTTP/1.1 206 Partial Content');
+		    }
+		    header("Content-Range: bytes $start-$end/$size");
+		    header("Content-Length: ".$length);
+		    $buffer = 1024 * 8;
+		    while(!feof($fp) && ($p = ftell($fp)) <= $end) {
+		      if ($p + $buffer > $end) {
+		        $buffer = $end - $p + 1;
+		      }
+		      set_time_limit(0);
+		      echo fread($fp, $buffer);
+		      flush();
+		    }
+		    fclose($fp);
+		    exit();
+		  } else {
+		    die('file not found');
+		  }
 	}
 
 	public function token() {
@@ -163,8 +234,8 @@ class GoogleDrive extends Controller {
 			$this->client->authenticate($_GET['code']);
 			$token_json = $this->client->getAccessToken();
 			//echo json_encode($token);
-			$_SESSION['access_token'] = $token_json['access_token'];
-			$this->accessToken = $_SESSION['access_token'];
+			$this->accessToken = $token_json['access_token'];
+			$this->accessToken = $this->accessToken;
 			var_dump($this->accessToken);
 
 		  	$folderPath = 'token/';

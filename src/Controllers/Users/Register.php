@@ -10,12 +10,14 @@ class Register extends Controller {
 	public function __construct() {
 		$this->db = new DB();
 	}
-	public function create_user() {
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+	public function create_user() 
+	{
+		if($_SERVER['REQUEST_METHOD'] == 'POST') 
+		{
 			if(isset($_POST['btn-submit'])) {
-				$username = $_POST['username'];
-				$email = $_POST['email'];
-				$password = $_POST['password'];
+				$username = xss_clean($_POST['username']);
+				$email = strip_tags($_POST['email']);
+				$password = strip_tags($_POST['password']);
 				$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 				$data = [
 					'username' => $username,

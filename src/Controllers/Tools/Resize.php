@@ -24,4 +24,44 @@ class Resize extends Controller {
 		}
 
 	}
+
+	public function resize02($newwidth) {
+		$folder = ROOTPATH.'\\photos\\1\\';
+		$images = scandir($folder);
+		foreach($images as $image) {
+			$img = $folder.$image;
+			$filesize = filesize($img);
+			if($filesize < 10000) {
+				
+			}
+			else {
+				resize_image($img, $newwidth);
+			}
+			
+		}
+		
+	}
+
+	public function watermark() {
+		$folder = ROOTPATH.'\\photos\\1\\';
+		$images = scandir($folder);
+		foreach($images as $image) {
+	        $img = $folder.$image;
+	        $name = $image;
+	        $watermark = ROOTPATH.'\\photos\\vietmymedia.png';
+	        $img = $folder.$image;
+			$filesize = filesize($img);
+	        if($filesize < 10000) {
+				
+			}
+			else {
+				watermark_image($img, $watermark, $name);
+			}
+	        
+	    }
+		//$target = ROOTPATH.'\\resize\\banner1.jpg';
+		//$wtrmrk_file = ROOTPATH.'\\photos\\vietmymedia.png';
+		//$newcopy = ROOTPATH.'\\resize\\banner2.jpg';
+		//watermark_image($target, $wtrmrk_file, $newcopy);
+	}
 }

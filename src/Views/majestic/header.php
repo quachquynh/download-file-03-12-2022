@@ -185,6 +185,22 @@
                 <li class="nav-item"> <a class="nav-link" href="<?php echo ROOTURL;?>/ffm/convert">FFMpeg Convert</a></li>
                 <li class="nav-item"> <a class="nav-link" href="<?php echo ROOTURL;?>/download/url">Donwload Images</a></li>
                 <li class="nav-item"> <a class="nav-link" href="<?php echo ROOTURL;?>/youtube-download/id">Donwload Youtube</a></li>
+                <li class="nav-item"> <a class="nav-link" href="<?php echo ROOTURL;?>/user/register">Register</a></li>
+                <li class="nav-item"> <a class="nav-link" href="<?php echo ROOTURL;?>/user/login">Login</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-drive" aria-expanded="false" aria-controls="ui-basic">
+              <i class="mdi mdi-circle-outline menu-icon"></i>
+              <span class="menu-title">Google Drive</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-drive">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="<?php echo ROOTURL;?>/google-drive/auth">Drive Auth</a></li>
+                <li class="nav-item"> <a class="nav-link" href="<?php echo ROOTURL;?>/google-drive/upload">Drive Upload</a></li>
+                
               </ul>
             </div>
           </li>
