@@ -35,4 +35,11 @@ class Excel {
 
 		mysqli_close($mysql);
 	}
+
+	// Up len google drive thanh file .csv
+
+	// Instert in to du lieu vao database
+
+	// $posts = $wpdb->get_results("SELECT ID, post_title FROM $wpdb->posts WHERE post_status = 'publish'
+   //AND post_type='post' ORDER BY comment_count DESC LIMIT 0,4")
 }
