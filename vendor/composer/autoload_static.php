@@ -7,14 +7,12 @@ namespace Composer\Autoload;
 class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
 {
     public static $files = array (
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '1f87db08236948d07391152dccb70f04' => __DIR__ . '/..' . '/google/apiclient-services/autoload.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
@@ -41,8 +39,6 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         ),
         'S' => 
         array (
-            'Symfony\\Polyfill\\Php80\\' => 23,
-            'Symfony\\Polyfill\\Php73\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Service\\' => 26,
@@ -52,6 +48,7 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
             'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\Cache\\' => 24,
             'Streaming\\' => 10,
+            'Spatie\\TemporaryDirectory\\' => 26,
             'SohaibIlyas\\FacebookPhpSdk\\' => 27,
         ),
         'P' => 
@@ -84,6 +81,7 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
+            'FFMpeg\\' => 7,
         ),
         'C' => 
         array (
@@ -96,6 +94,7 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         'A' => 
         array (
             'App\\' => 4,
+            'Alchemy\\BinaryDriver\\' => 21,
         ),
     );
 
@@ -115,14 +114,6 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         'YouTube\\' => 
         array (
             0 => __DIR__ . '/..' . '/athlon1600/youtube-downloader/src',
-        ),
-        'Symfony\\Polyfill\\Php80\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
-        ),
-        'Symfony\\Polyfill\\Php73\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
@@ -160,6 +151,10 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         array (
             0 => __DIR__ . '/..' . '/aminyazdanpanah/php-ffmpeg-video-streaming/src',
         ),
+        'Spatie\\TemporaryDirectory\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/temporary-directory/src',
+        ),
         'SohaibIlyas\\FacebookPhpSdk\\' => 
         array (
             0 => __DIR__ . '/..' . '/sohaibilyas/facebook-php-sdk/src',
@@ -170,7 +165,7 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         ),
         'Psr\\Log\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+            0 => __DIR__ . '/..' . '/psr/log/src',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -241,6 +236,10 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
+        'FFMpeg\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-ffmpeg/php-ffmpeg/src/FFMpeg',
+        ),
         'Curl\\' => 
         array (
             0 => __DIR__ . '/..' . '/athlon1600/php-curl-client/src',
@@ -265,14 +264,18 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
+        'Alchemy\\BinaryDriver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-ffmpeg/php-ffmpeg/src/Alchemy/BinaryDriver',
+        ),
     );
 
     public static $prefixesPsr0 = array (
-        'N' => 
+        'S' => 
         array (
-            'Neutron' => 
+            'Sunra\\PhpSimple\\HtmlDomParser' => 
             array (
-                0 => __DIR__ . '/..' . '/neutron/temporary-filesystem/src',
+                0 => __DIR__ . '/..' . '/sunra/php-simple-html-dom-parser/Src',
             ),
         ),
         'M' => 
@@ -289,13 +292,6 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
                 0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
             ),
         ),
-        'F' => 
-        array (
-            'FFMpeg' => 
-            array (
-                0 => __DIR__ . '/..' . '/php-ffmpeg/php-ffmpeg/src',
-            ),
-        ),
         'E' => 
         array (
             'Evenement' => 
@@ -303,17 +299,9 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
                 0 => __DIR__ . '/..' . '/evenement/evenement/src',
             ),
         ),
-        'A' => 
-        array (
-            'Alchemy' => 
-            array (
-                0 => __DIR__ . '/..' . '/alchemy/binary-driver/src',
-            ),
-        ),
     );
 
     public static $classMap = array (
-        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Google_AccessToken_Revoke' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Google_AccessToken_Verify' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
@@ -336,12 +324,9 @@ class ComposerStaticInit3196f78deed5fab0ec278ec50c80fdd9
         'Google_Task_Retryable' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Google_Task_Runner' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Google_Utils_UriTemplate' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
-        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'Shuchkin\\SimpleXLSX' => __DIR__ . '/..' . '/shuchkin/simplexlsx/src/SimpleXLSX.php',
         'Stringable' => __DIR__ . '/..' . '/myclabs/php-enum/stubs/Stringable.php',
-        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
-        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
+        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

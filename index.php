@@ -117,5 +117,7 @@ $router->post('/wordpress/insert', 'App\Controllers\Tools\Wordpress@insert_post'
 
 $router->get('/excel/read', 'App\Controllers\Tools\Excel@read');
 
+$router->get('/crawler', 'App\Controllers\Tools\Crawler@crawler');
+
 $router->run();
 

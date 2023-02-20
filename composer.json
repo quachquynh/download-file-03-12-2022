@@ -17,6 +17,7 @@
         "madcodez/youtube": "^0.1.4",
         "thiagoalessio/tesseract_ocr": "^2.12",
         "phpoffice/phpspreadsheet": "^1.27",
-        "shuchkin/simplexlsx": "^1.0"
+        "shuchkin/simplexlsx": "^1.0",
+        "sunra/php-simple-html-dom-parser": "1.5.2"
     }
 }

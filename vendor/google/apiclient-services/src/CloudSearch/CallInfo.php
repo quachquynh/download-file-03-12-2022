@@ -22,24 +22,36 @@ class CallInfo extends \Google\Collection
   protected $collection_key = 'youTubeBroadcastSessionInfos';
   protected $abuseReportingConfigType = AbuseReportingConfig::class;
   protected $abuseReportingConfigDataType = '';
+  public $abuseReportingConfig;
   protected $artifactOwnerType = UserDisplayInfo::class;
   protected $artifactOwnerDataType = '';
+  public $artifactOwner;
   protected $attachedDocumentsType = DocumentInfo::class;
   protected $attachedDocumentsDataType = 'array';
+  public $attachedDocuments;
+  /**
+   * @var string[]
+   */
+  public $availableAccessTypes;
   protected $availableReactionsType = ReactionInfo::class;
   protected $availableReactionsDataType = 'array';
+  public $availableReactions;
   protected $broadcastSessionInfoType = BroadcastSessionInfo::class;
   protected $broadcastSessionInfoDataType = '';
+  public $broadcastSessionInfo;
   /**
    * @var string
    */
   public $calendarEventId;
   protected $coActivityType = CoActivity::class;
   protected $coActivityDataType = '';
+  public $coActivity;
   protected $collaborationType = Collaboration::class;
   protected $collaborationDataType = '';
+  public $collaboration;
   protected $cseInfoType = CseInfo::class;
   protected $cseInfoDataType = '';
+  public $cseInfo;
   /**
    * @var int
    */
@@ -47,31 +59,35 @@ class CallInfo extends \Google\Collection
   /**
    * @var string
    */
-  public $mediaBackendInfo;
-  /**
-   * @var string
-   */
   public $organizationName;
   protected $paygateInfoType = PaygateInfo::class;
   protected $paygateInfoDataType = '';
+  public $paygateInfo;
   protected $presenterType = Presenter::class;
   protected $presenterDataType = '';
+  public $presenter;
   protected $recordingInfoType = RecordingInfo::class;
   protected $recordingInfoDataType = '';
+  public $recordingInfo;
   protected $recordingSessionInfoType = RecordingSessionInfo::class;
   protected $recordingSessionInfoDataType = '';
+  public $recordingSessionInfo;
   protected $settingsType = CallSettings::class;
   protected $settingsDataType = '';
+  public $settings;
   protected $streamingSessionsType = StreamingSessionInfo::class;
   protected $streamingSessionsDataType = 'array';
+  public $streamingSessions;
   protected $transcriptionSessionInfoType = TranscriptionSessionInfo::class;
   protected $transcriptionSessionInfoDataType = '';
+  public $transcriptionSessionInfo;
   /**
    * @var int
    */
   public $viewerCount;
   protected $youTubeBroadcastSessionInfosType = YouTubeBroadcastSessionInfo::class;
   protected $youTubeBroadcastSessionInfosDataType = 'array';
+  public $youTubeBroadcastSessionInfos;
 
   /**
    * @param AbuseReportingConfig
@@ -114,6 +130,20 @@ class CallInfo extends \Google\Collection
   public function getAttachedDocuments()
   {
     return $this->attachedDocuments;
+  }
+  /**
+   * @param string[]
+   */
+  public function setAvailableAccessTypes($availableAccessTypes)
+  {
+    $this->availableAccessTypes = $availableAccessTypes;
+  }
+  /**
+   * @return string[]
+   */
+  public function getAvailableAccessTypes()
+  {
+    return $this->availableAccessTypes;
   }
   /**
    * @param ReactionInfo[]
@@ -212,20 +242,6 @@ class CallInfo extends \Google\Collection
   public function getMaxJoinedDevices()
   {
     return $this->maxJoinedDevices;
-  }
-  /**
-   * @param string
-   */
-  public function setMediaBackendInfo($mediaBackendInfo)
-  {
-    $this->mediaBackendInfo = $mediaBackendInfo;
-  }
-  /**
-   * @return string
-   */
-  public function getMediaBackendInfo()
-  {
-    return $this->mediaBackendInfo;
   }
   /**
    * @param string
