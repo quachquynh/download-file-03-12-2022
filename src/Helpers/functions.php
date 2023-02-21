@@ -106,3 +106,18 @@ function uploadFTP($root, $folder, $local_file, $name){
     ftp_close($ftp_conn);
     return true;
 }
+
+function regex_class($data, $class_name) {
+    preg_match_all('/<div\sclass\=\"'.$class_name.'(.*?)<\/div>/s', $data, $match);
+    return $match[1];
+}
+
+function foreach_data($cat) {
+    $data_arr = array();
+    foreach($cat as $item) {
+        $exp = explode('>', $item);
+        $data_arr[] = $exp;
+    };
+    return $data_arr;
+    
+}
